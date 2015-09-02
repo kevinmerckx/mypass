@@ -7,12 +7,16 @@
 //
 
 #import "ViewController.h"
+#import "PassSearch.h"
+
+@import AppKit;
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.results = [[NSArray alloc] init];
     // Do any additional setup after loading the view.
 }
 
@@ -22,4 +26,56 @@
     // Update the view, if already loaded.
 }
 
+// NSTableViewDataSource methods
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return self.results.count;
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+    if ([tableColumn.identifier isEqualToString:@"account"]) {
+        return ((MyPassItem*)(self.results[row])).account;
+    } else {
+        return ((MyPassItem*)(self.results[row])).server;
+    }
+}
+
+- (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"PassItemView" owner:self];
+    ((NSTextField*)[result viewWithTag:0]).stringValue = [tableColumn.identifier isEqualToString:@"account"] ?
+    ((MyPassItem*)(self.results[row])).account : ((MyPassItem*)(self.results[row])).server;
+    
+    // Return the result
+    return result;
+    
+}
+
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(NSInteger)row {
+    return YES;
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+    if (self.resultsTableView.selectedRow < 0) {
+        return;
+    }
+    
+    MyPassItem *item = self.results[self.resultsTableView.selectedRow];
+
+    [[NSPasteboard generalPasteboard] clearContents];
+    [[NSPasteboard generalPasteboard] setData:[[item getPassword] dataUsingEncoding:NSUTF8StringEncoding] forType:NSPasteboardTypeString];
+}
+
+// NSTextFieldDelegate methods
+
+- (void)controlTextDidChange:(NSNotification *)obj {
+    NSString *searchText = self.searchFieldCell.stringValue;
+    NSLog(@"end, %@", searchText);
+    self.results = [PassSearch searchItems:searchText];
+    [self.resultsTableView reloadData];
+}
+
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
+    return YES;
+}
 @end

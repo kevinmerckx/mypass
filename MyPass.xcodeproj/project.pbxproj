@@ -13,6 +13,7 @@
 		0A7127571B95ED6F00F0CC53 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A7127561B95ED6F00F0CC53 /* Images.xcassets */; };
 		0A71275A1B95ED6F00F0CC53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A7127581B95ED6F00F0CC53 /* Main.storyboard */; };
 		0A7127661B95ED6F00F0CC53 /* MyPassTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7127651B95ED6F00F0CC53 /* MyPassTests.m */; };
+		0A7127711B95FE4200F0CC53 /* PassSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7127701B95FE4200F0CC53 /* PassSearch.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,8 @@
 		0A71275F1B95ED6F00F0CC53 /* MyPassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyPassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7127641B95ED6F00F0CC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A7127651B95ED6F00F0CC53 /* MyPassTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyPassTests.m; sourceTree = "<group>"; };
+		0A71276F1B95FE4200F0CC53 /* PassSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PassSearch.h; sourceTree = "<group>"; };
+		0A7127701B95FE4200F0CC53 /* PassSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PassSearch.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 				0A7127561B95ED6F00F0CC53 /* Images.xcassets */,
 				0A7127581B95ED6F00F0CC53 /* Main.storyboard */,
 				0A71274C1B95ED6F00F0CC53 /* Supporting Files */,
+				0A71276F1B95FE4200F0CC53 /* PassSearch.h */,
+				0A7127701B95FE4200F0CC53 /* PassSearch.m */,
 			);
 			path = MyPass;
 			sourceTree = "<group>";
@@ -215,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A7127711B95FE4200F0CC53 /* PassSearch.m in Sources */,
 				0A7127551B95ED6F00F0CC53 /* ViewController.m in Sources */,
 				0A7127521B95ED6F00F0CC53 /* main.m in Sources */,
 				0A7127501B95ED6F00F0CC53 /* AppDelegate.m in Sources */,
