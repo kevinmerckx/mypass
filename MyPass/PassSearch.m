@@ -15,29 +15,33 @@
 @implementation MyPassItem
 
 - (NSString*)getPassword {
-    const char *acct = [self.account UTF8String];
-    const char *srvr = [self.server UTF8String];
-    
-    UInt32 acctLen = (UInt32)strlen(acct);
-    UInt32 srvrLen = (UInt32)strlen(srvr);
-    
-    UInt32 pwLen = 0;
+    const char *acct = nil, *srvr = nil;
     void *pw = 0;
+    NSString *result = nil;
     
-    [PassSearch printError:SecKeychainFindInternetPassword(nil, srvrLen, srvr, 0, nil, acctLen, acct, 0, nil, 0, kSecProtocolTypeAny, kSecAuthenticationTypeAny, &pwLen, &pw, nil)];
-    
-    CFStringRef pwString = CFStringCreateWithBytes(kCFAllocatorDefault, pw, pwLen, kCFStringEncodingUTF8, NO);
+    @try {
+        acct = [self.account UTF8String];
+        srvr = [self.server UTF8String];
         
-    if (!pw) {
-        return nil;
+        UInt32 acctLen = (UInt32)strlen(acct);
+        UInt32 srvrLen = (UInt32)strlen(srvr);
+        
+        UInt32 pwLen = 0;
+        
+        [PassSearch printError:SecKeychainFindInternetPassword(nil, srvrLen, srvr, 0, nil, acctLen, acct, 0, nil, 0, kSecProtocolTypeAny, kSecAuthenticationTypeAny, &pwLen, &pw, nil)];
+        
+        if (pw) {
+            result = [NSString stringWithUTF8String:pw];
+        }
     }
-    NSString *password = [NSString stringWithUTF8String:pw];
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        if (pw) SecKeychainItemFreeContent(nil, pw);
+    }
     
-    SecKeychainItemFreeContent(nil, pw);
-    
-    CFRelease(pwString);
-    
-    return password;
+    return result;
 }
 
 @end
@@ -55,26 +59,34 @@
 
 + (NSArray*)
 searchItems:(NSString*) server {
-    
-    // create query
-    CFMutableDictionaryRef query = CFDictionaryCreateMutable(kCFAllocatorDefault, 3, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-    CFDictionaryAddValue(query, kSecReturnAttributes, kCFBooleanTrue);
-    CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
-    CFDictionaryAddValue(query, kSecClass, kSecClassInternetPassword);
-    
-    // get search results
-    CFArrayRef result = nil;
-    OSStatus status = SecItemCopyMatching(query, (CFTypeRef*)&result);
-    assert(status == 0);
-    
+    CFMutableDictionaryRef query = nil;
+    CFArrayRef items = nil;
     MapContext *context = [[MapContext alloc] init];
     context.array = [[NSMutableArray alloc] init];
     context.server = server;
-    
-    // do something with the result
-    CFRange range = CFRangeMake(0, CFArrayGetCount(result));
-    
-    CFArrayApplyFunction(result, range, addItem, (__bridge void*)context);
+
+    @try {
+        // create query
+        query = CFDictionaryCreateMutable(kCFAllocatorDefault, 3, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        CFDictionaryAddValue(query, kSecReturnAttributes, kCFBooleanTrue);
+        CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
+        CFDictionaryAddValue(query, kSecClass, kSecClassInternetPassword);
+        
+        // get search results
+        OSStatus status = SecItemCopyMatching(query, (CFTypeRef*)&items);
+        assert(status == 0);
+        
+        // do something with the result
+        CFRange range = CFRangeMake(0, CFArrayGetCount(items));
+        
+        CFArrayApplyFunction(items, range, addItem, (__bridge void*)context);
+    }
+    @catch (NSException *exception) {
+    }
+    @finally {
+        if (query) CFRelease(query);
+        if (items) CFRelease(items);
+    }
     
     return context.array;
 }
