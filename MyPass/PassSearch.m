@@ -27,9 +27,7 @@
     [PassSearch printError:SecKeychainFindInternetPassword(nil, srvrLen, srvr, 0, nil, acctLen, acct, 0, nil, 0, kSecProtocolTypeAny, kSecAuthenticationTypeAny, &pwLen, &pw, nil)];
     
     CFStringRef pwString = CFStringCreateWithBytes(kCFAllocatorDefault, pw, pwLen, kCFStringEncodingUTF8, NO);
-    
-    NSLog(@"%s -> %s : %@", srvr, acct, pwString);
-    
+        
     if (!pw) {
         return nil;
     }

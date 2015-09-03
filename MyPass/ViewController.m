@@ -33,18 +33,14 @@
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    if ([tableColumn.identifier isEqualToString:@"account"]) {
-        return ((MyPassItem*)(self.results[row])).account;
-    } else {
-        return ((MyPassItem*)(self.results[row])).server;
-    }
+    return ((MyPassItem*)(self.results[row]));
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
 
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"PassItemView" owner:self];
-    ((NSTextField*)[result viewWithTag:0]).stringValue = [tableColumn.identifier isEqualToString:@"account"] ?
-    ((MyPassItem*)(self.results[row])).account : ((MyPassItem*)(self.results[row])).server;
+    ((NSTextField*)[result viewWithTag:0]).stringValue = ((MyPassItem*)(self.results[row])).account;
+    ((NSTextField*)[result viewWithTag:1]).stringValue = ((MyPassItem*)(self.results[row])).server;
     
     // Return the result
     return result;
