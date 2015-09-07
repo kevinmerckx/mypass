@@ -18,6 +18,9 @@
 
     self.results = [[NSArray alloc] init];
     // Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [[[NSApplication sharedApplication] mainWindow] makeFirstResponder:self.searchFieldCell.controlView];
+    }];
 }
 
 - (void)setRepresentedObject:(id)representedObject {

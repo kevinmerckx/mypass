@@ -22,4 +22,8 @@
     // Insert code here to tear down your application
 }
 
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:notification.name object:self];
+}
+
 @end
